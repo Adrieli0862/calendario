@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario</title>
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<nav class="nav-center unamBlue">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo left "><img src="img/logoUnam.png"  alt=""></a>
+      <a href="#" class="brand-logo right "><img src="img/logoCRAI_LT.png" alt=""></a>
+      <ul>
+        <li><a href="/calendar.html">Calendario</a></li>
+        <li><a href="/panel.html">Panel de eventos</a></li>
+        <li><a  class="active" href="/usersRequests.html">Usuarios</a></li>
+        <li><a href="/help.html">Ayuda</a></li>
+    </ul>
+    </div>
+  </nav>
+<body>
+ 
+    <main class="container">
+        <br>
+        <ul class="collection">
+          <li class="collection-item avatar">
+              <i class="material-icons circle">person</i>
+              <span class="title" id="SedeName">UNAM Costa Rica</span>
+              <p ><span id="usr"></span> <br>
+                <span id="typeUsr"></span>
+              </p>
+              <button id="closesession" class="btn secondary-content red-text grey lighten-5">Cerrar sesión<i class="material-icons">call_missed</i></button>
+          </li>
+        </ul>
+        <br>
+        <div class="row">
+            <div class="col s12"><h2>User Requests</h2></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>email</th>
+                    <th>campus</th>
+                    <th>status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="usersRequestList">
+                
+            </tbody>
+        </table>
+        <br>
+    </main>
+    
+</body>
+<footer class="page-footer unamBlue white-text">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        
+          <h5 class="widgetheading">Contáctanos</h5>
+         
+          <strong>Coordinación de Relaciones y Asuntos Internacionales</strong><br>
+           Edificio CIPPS - Centro de Investigación en Población, Políticas y Salud<br>
+           Planta Baja, Unidad Internacional de Sedes Universitarias<br>
+           Circuito Cultural s/n <br>
+           Ciudad Universitaria, México, D.F.<br>
+           C.P. 04510	 
+
+          <p>
+            <i class="icon-phone"></i> (+52) 56226666 - Ext. 82270 <br>
+            <i class="icon-envelope-alt"></i> crai@unam.mx
+          </p>
+        
+      </div>
+      <div class="col s12 m3">
+          <h5 class="widgetheading">Sitios de Interés</h5>
+          <ul class="link-list">
+            <li><a class="gold-text" href="http://www.cepe.unam.mx/" target="_blank">CEPE</a></li>
+            <li><a class="gold-text" href="http://www.global.unam.mx/" target="_blank">DGECI</a></li>
+            <li><a class="gold-text" href="https://www.unam.mx/" target="_blank">UNAM</a></li>
+            <li><a class="gold-text" href="http://www.redmacro.unam.mx/" target="_blank">REDMACRO</a></li>
+            <li><a class="gold-text" href="uisu.html" target="_blank">UISU</a></li>
+            <li><a class="gold-text" href="https://siele.org/" target="_blank">SIELE</a></li>
+          </ul>
+          <br>
+          <b><a class="gold-text" href="noticias/AvisoPrivacidadCRAI.pdf" target="_blank"> AVISO DE PRIVACIDAD </a></b>
+        
+      </div>
+      <div class="col s12 m3">
+       
+          <h5 class="widgetheading">Venir a estudiar a la UNAM</h5>
+          <ul class="link-list">
+            <li><a  class="gold-text" href="mailto:info@global.unam.mx?subject=Contact%20from%20the%20Web%20Page">info@global.unam.mx</a></li>					
+          </ul>
+
+          <div class="widget"><br>
+            <img src="img/firmaUNAMs.png">
+          </div>
+      </div>
+        
+      
+      
+    </div>
+  </div>
+<div class=" white-text">
+  <hr>
+  <div class="row">
+    <div class="col s12 m6 center-align"><p>Sitio Administrado por UNAM Costa Rica <br><a class="gold-text" href="mailto:unamcostarica@gmail.com">unamcostarica@gmail.com</a></p></div>
+    <div class="col s12 m6 center-align"><p>© 2022 Coordinación de Relaciones y Asuntos Internacionales :: CRAI-UNAM - All Rights Reserved<br>Creado median el programa de prácticas profesionales de la FCA</p></div>
+  </div>
+</div>
+</footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script>
+    var filters={name:'',grup:'',sem:'',clave:''}
+     var usr;
+     function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while(c.charAt(0) == ' ') c = c.substring(1);
+          if(c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return null;
+      }
+      (function(){
+          if ((u=getCookie('authkey'))==null) 
+            location.replace('/signIn.html');
+          else
+            $.ajax('data/users/'+u+'.json').done(function(jsondata){
+              usr=jsondata.user;
+              $('#usr').text(usr.usr);
+              sede =usr.id_sede;
+              $.ajax('api/sedes?authkey='+u).done(function (response) {
+                sedes={}
+                  response.forEach(element => {
+                      sedes[element.id]=element;
+                      if(element.id===sede) $('#SedeName').text(element.nombre)
+                      $('#sedes').append('<option value="'+element.id+'" '+(element.id==sede?'selected':'')+'>'+element.nombre+'</>')
+                  });
+              })
+              const script = document.createElement('script');
+              script.src = '../js/usersRequests.js';
+              document.head.append(script);
+            }).fail(function(e){
+              location.replace('/signIn.html');
+            });
+        })();
+        $('#closesession').click(function (params) {
+          const key = getCookie('authkey');
+          if (!key) location.replace('/signIn.html'); 
+          else document.cookie = "authkey=; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+          return $.ajax({
+                    url: '/api/auth?authkey=' + key,
+                    type: 'DELETE',
+                    contentType:'application/json',  
+                    dataType: 'text',                
+                    success: setTimeout(function(){location.replace('/signIn.html')}, 100),
+                });
+        }
+        );
+  </script>
+</html>

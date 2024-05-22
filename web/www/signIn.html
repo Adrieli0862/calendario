@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<nav class="nav-center unamBlue">
+  <div class="nav-wrapper container">
+    <a href="#" class="brand-logo left "><img src="img/logoUnam.png"  alt=""></a>
+    <a href="#" class="brand-logo right "><img src="img/logoCRAI_LT.png" alt=""></a>
+    <ul>
+      
+  </ul>
+  </div>
+</nav>
+<body>
+    <main class="container">
+              <br><br><br>
+           
+       <div class="container">
+            <div class="row">
+              <div class="col-6 text-center">
+              <img src="img/perrito.jpg" alt="" class="img-fluid" >
+              </div>
+               
+              <div class="col-6 text-end">
+              <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+        
+          
+                   <form  class="login-form" id="frmSignin">
+                   <i class="material-icons prefix">mail_outline</i>
+                   <input class="validate" required id="usr" type="email" name="usr">
+                   <label for="usr" data-error="wrong" data-success="right">Email</label>
+                                      
+                
+                    <i class="material-icons prefix">lock_outline</i>
+                    <input class="validate" required id="pwd" type="password" name="pwd">
+                    <label for="pwd">Password</label>
+                    
+                      <div class="row">
+                      <div class="input-field col s12">
+                        <a href="#" id="btnSignin" class="btn waves-effect waves-light col s12 unamBlue">SignUp</a>
+                      </div>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+        </div>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js" integrity="sha384-uYiTH2ePRlFXtnfS6psKczK3AlqsDO3dpEHqz/GRNrGQi9QdEh8aFAZob9pSyce4" crossorigin="anonymous"></script>
+    <script src="js/materialize.js"></script>
+    <script> 
+        pubkey="";
+        sedes="";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "./api/pubkey");
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+                // Typical action to be performed when the document is ready:
+                pubkey = xhr.responseText;
+            }
+        };
+        xhr.send();
+        document.getElementById('btnSignin').addEventListener('click', function(e) {
+        const fdata = new FormData(document.getElementById("frmSignin"));
+        var crypt = new JSEncrypt();
+        crypt.setPublicKey(pubkey);
+        //cifra las credenciales
+        var s = crypt.encrypt(fdata.get('usr') + '|' + fdata.get('pwd'));
+        var request = new XMLHttpRequest();
+        request.open('GET', 'api/auth?s='+encodeURIComponent(s));
+        request.onload = function(oEvent) {
+          if (request.status == 200) {
+            const o=JSON.parse(request.response);
+            document.cookie = 'authkey=' + o.authkey + ';expires=;path=/;';
+            location.href = 'calendar.html';
+          } else {
+            console.log( "Error " + request.status + " occurred");
+          }
+        };
+        request.send();
+      })
+    </script>
+</body>
+<footer class="page-footer unamBlue white-text">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        
+          <h5 class="widgetheading">Contáctanos</h5>
+         
+          <strong>Coordinación de Relaciones y Asuntos Internacionales</strong><br>
+           Edificio CIPPS - Centro de Investigación en Población, Políticas y Salud<br>
+           Planta Baja, Unidad Internacional de Sedes Universitarias<br>
+           Circuito Cultural s/n <br>
+           Ciudad Universitaria, México, D.F.<br>
+           C.P. 04510	 
+
+          <p>
+            <i class="icon-phone"></i> (+52) 56226666 - Ext. 82270 <br>
+            <i class="icon-envelope-alt"></i> crai@unam.mx
+          </p>
+        
+      </div>
+      <div class="col s12 m3">
+          <h5 class="widgetheading">Sitios de Interés</h5>
+          <ul class="link-list">
+            <li><a class="gold-text" href="http://www.cepe.unam.mx/" target="_blank">CEPE</a></li>
+            <li><a class="gold-text" href="http://www.global.unam.mx/" target="_blank">DGECI</a></li>
+            <li><a class="gold-text" href="https://www.unam.mx/" target="_blank">UNAM</a></li>
+            <li><a class="gold-text" href="http://www.redmacro.unam.mx/" target="_blank">REDMACRO</a></li>
+            <li><a class="gold-text" href="uisu.html" target="_blank">UISU</a></li>
+            <li><a class="gold-text" href="https://siele.org/" target="_blank">SIELE</a></li>
+          </ul>
+          <br>
+          <b><a class="gold-text" href="noticias/AvisoPrivacidadCRAI.pdf" target="_blank"> AVISO DE PRIVACIDAD </a></b>
+        
+      </div>
+      <div class="col s12 m3">
+       
+          <h5 class="widgetheading">Venir a estudiar a la UNAM</h5>
+          <ul class="link-list">
+            <li><a  class="gold-text" href="mailto:info@global.unam.mx?subject=Contact%20from%20the%20Web%20Page">info@global.unam.mx</a></li>					
+          </ul>
+
+          <div class="widget"><br>
+            <img src="img/firmaUNAMs.png">
+          </div>
+      </div>
+        
+      
+      
+    </div>
+  </div>
+<div class=" white-text">
+  <hr>
+  <div class="row">
+    <div class="col s12 m6 center-align"><p>Sitio Administrado por UNAM Costa Rica <br><a class="gold-text" href="mailto:unamcostarica@gmail.com">unamcostarica@gmail.com</a></p></div>
+    <div class="col s12 m6 center-align"><p>© 2022 Coordinación de Relaciones y Asuntos Internacionales :: CRAI-UNAM - All Rights Reserved<br>Creado median el programa de prácticas profesionales de la FCA</p></div>
+  </div>
+</div>
+</footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/materialize.js"></script>
+</html>

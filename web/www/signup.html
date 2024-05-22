@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+<nav class="nav-center unamBlue">
+  <div class="nav-wrapper container">
+    <a href="#" class="brand-logo left "><img src="img/logoUnam.png"  alt=""></a>
+    <a href="#" class="brand-logo right "><img src="img/escudo_fmvz.png" alt=""></a>
+    <ul>
+      <li><a href="/about">Acerca de</a></li>
+      <li><a href="/contact">Contacto</a></li>
+      <li><a href="/help">Ayuda</a></li>
+  </ul>
+  </div>
+</nav>
+<body>
+    <main class="container">
+        <br><br><br>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 z-depth-6 card-panel">
+                  <form class="login-form" id="frmSignup">
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <i class="material-icons prefix">mail_outline</i>
+                        <input class="validate" required id="e" type="email" name="e">
+                        <label for="e" data-error="wrong" data-success="right">Email</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                          <i class="material-icons prefix">person</i>
+                          <input class="validate" required id="n" type="text" name="n">
+                          <label for="n" data-error="wrong" data-success="right">Nombre completo</label>
+                        </div>
+                    </div>
+                   
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <i class="material-icons prefix">clave</i>
+                        <input class="validate" required id="s" type="text" name="s">
+                        <label for="n" data-error="wrong" data-success="right">Matricula o número de cuenta</label>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="input-field col s12">
+                      <i class="material-icons prefix">grupo</i>
+                      <input class="validate" required id="f" type="text" name="f">
+                      <label for="n" data-error="wrong" data-success="right">Grupo o programa</label>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <i class="material-icons prefix">semestre</i>
+                    <input class="validate" required id="g" type="text" name="g">
+                    <label for="n" data-error="wrong" data-success="right">semestre</label>
+                  </div>
+              </div>
+
+
+
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <i class="material-icons prefix">lock_outline</i>
+                        <input class="validate" required id="p1" type="password" name="p1">
+                        <label for="p1">Password</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                          <i class="material-icons prefix">lock_outline</i>
+                          <input class="validate" required id="p2" type="password" name="p2">
+                          <label for="p2">Repeat Password</label>
+                        </div>
+                      </div>
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <a href="#" id="btnSignup" class="btn waves-effect waves-light col s12 unamBlue">SignUp</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+        </div>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js" integrity="sha384-uYiTH2ePRlFXtnfS6psKczK3AlqsDO3dpEHqz/GRNrGQi9QdEh8aFAZob9pSyce4" crossorigin="anonymous"></script>
+    <script src="js/materialize.js"></script>
+    <script> 
+        pubkey="";
+        sedes="";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "./api/pubkey");
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+                // Typical action to be performed when the document is ready:
+                pubkey = xhr.responseText;
+            }
+        };
+        xhr.send();
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "./api/sedes");
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+                // Typical action to be performed when the document is ready:
+                sedes = JSON.parse(xhr.responseText);
+                selectSedes = document.getElementById('s');
+                console.log(selectSedes)
+                sedes.forEach(element => {
+                  console.log(element)
+                  op = document.createElement('option');
+                  op.value=element.id;
+                  op.innerHTML=element.nombre;
+                  selectSedes.append(op);
+                });
+                $('select').formSelect();
+            }
+        };
+        xhr.send();
+
+        document.getElementById('btnSignup').addEventListener('click', function(e) {
+          const fdata = new FormData(document.getElementById("frmSignup"));
+          if(fdata.get('p1')!==fdata.get('p2')){
+            alert('Passwords must be the same');
+            return
+          }
+          var request = new XMLHttpRequest();
+          request.open('POST', 'http://127.0.0.1/calendario/UNAMCR_calendario-master/web/www/api/?api_uri_r=oportunities');
+          request.onload = function(oEvent) {
+            if (request.status == 200) {
+              console.log(request.response);
+              alert('Succes on send Request');
+            } else {
+              console.log( "Error " + request.status + " occurred");
+              alert( "Error " + request.status + " occurred");
+            }
+          };
+          request.send(fdata);
+        });
+    </script>
+</body>
+<footer class="page-footer unamBlue white-text">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        
+          <h5 class="widgetheading">Contáctanos</h5>
+         
+          <strong> <br>
+            Universidad Nacional Autónoma de México,<br> Ciudad Universitaria, 
+            Av. Universidad #3000, Colonia, C.U., <br>Coyoacán, 04510 Ciudad de México<br>
+           C.P. 04510	 
+
+          <p>
+            <i class="icon-phone"></i>   55 5622 5864 <br>
+            <i class="icon-envelope-alt"></i> 
+          </p>
+        
+      </div>
+      <div class="col s12 m3">
+          <h5 class="widgetheading">Sitios de Interés</h5>
+          <ul class="link-list">
+          
+            <li><a class="gold-text" href="https://www.fmvz.unam.mx/fmvz/principal/sitios.html" target="_blank">UNAM</a></li>
+          
+          </ul>
+          <br>
+          <b><a class="gold-text" href="https://www.fmvz.unam.mx/fmvz/principal/aviso_privacidad.html" target="_blank"> AVISO DE PRIVACIDAD </a></b>
+        
+      </div>
+      <div class="col s12 m3">
+       
+          <h5 class="widgetheading">FMVZ-UNAM
+            Ciudad Universitaria</h5>
+          <ul class="link-list">
+            <li><a  class="gold-text" href="mailto:info@global.unam.mx?subject=Contact%20from%20the%20Web%20Page">
+              simulación@fmvz.unam.mx </a></li>					
+          </ul>
+
+          <div class="widget"><br>
+            <img src="img/firmaUNAMs.png">
+          </div>
+      </div>
+        
+      
+      
+    </div>
+  </div>
+<div class=" white-text">
+  <hr>
+  <div class="row">
+    <div class="col s12 m6 center-align"><p>Sitio Administrado por FMVZ-UNAM <br>
+      <a class="gold-text" href=""></a></p></div>
+    <div class="col s12 m6 center-align"><p>©</p></div>
+  </div>
+</div>
+</footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/materialize.js"></script>
+</html>
+
+

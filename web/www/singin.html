@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/main.css">
+     <!-- BOOTSTRAP CSS -->
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+     <!-- FONT AWESOME -->
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+     <!-- CUSTOM CSS -->
+</head>
+<nav class="nav-center unamBlue">
+  <div class="nav-wrapper container">
+    <a href="#" class="brand-logo left "><img src="img/logoUnam.png"  alt=""></a>
+    <a href="#" class="brand-logo right "><img src="img/escudo_fmvz.png" alt=""></a>
+    <ul>
+      
+  </ul>
+  </div>
+</nav>
+<body>
+    <main class="container-sm">
+        <br><br><br>
+        <div class=" container-sm">
+          <div class="row">
+             <div class="col-3 text-end"> 
+              </div>
+            <div class="row">
+              <div class="col-4 text-end"> 
+               <img src="img/perrito.jpg" alt="" class="bg-login-image " > 
+             </div>
+
+            <div class="col-5 end-align">  
+              <form class="login-form" id="frmSignin"> 
+                  <h1 class="h4 text-gray-900 mb-4">Bienvenido!</h1>
+            
+              
+                       <form  class="login-form" id="frmSignin">
+                       <i class="material-icons prefix">mail_outline</i>
+                       <input class="validate" required id="usr" type="email" name="usr">
+                       <label for="usr" data-error="wrong" data-success="right">Email</label>
+                                          
+                    
+                        <i class="material-icons prefix">lock_outline</i>
+                        <input class="validate" required id="pwd" type="password" name="pwd">
+                        <label for="pwd">Password</label>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                          <div class="row">
+                          <div class="input-field col s6">
+                            <a href="#" id="btnSignin" class="btn waves-effect waves-light col s12 unamBlue">Ingresa</a>
+                          </div>
+                        </div>
+                      </form>
+    
+                    </div>
+            </div>
+          </div>
+        </div>
+            
+        
+
+
+           
+        
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js" integrity="sha384-uYiTH2ePRlFXtnfS6psKczK3AlqsDO3dpEHqz/GRNrGQi9QdEh8aFAZob9pSyce4" crossorigin="anonymous"></script>
+    <script src="js/materialize.js"></script>
+    <script> 
+        pubkey="";
+        sedes="";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "./api/pubkey");
+        xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+                // Typical action to be performed when the document is ready:
+                pubkey = xhr.responseText;
+            }
+        };
+        xhr.send();
+        document.getElementById('btnSignin').addEventListener('click', function(e) {
+        const fdata = new FormData(document.getElementById("frmSignin"));
+        var crypt = new JSEncrypt();
+        crypt.setPublicKey(pubkey);
+        //cifra las credenciales
+        var s = crypt.encrypt(fdata.get('usr') + '|' + fdata.get('pwd'));
+        var request = new XMLHttpRequest();
+        request.open('GET', 'api/auth?s='+encodeURIComponent(s));
+        request.onload = function(oEvent) {
+          if (request.status == 200) {
+            const o=JSON.parse(request.response);
+            document.cookie = 'authkey=' + o.authkey + ';expires=;path=/;';
+            location.href = 'calendar.html';
+          } else {
+            console.log( "Error " + request.status + " occurred");
+          }
+        };
+        request.send();
+      })
+    </script>
+</body>
+<footer class="page-footer unamBlue white-text">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        
+          <h5 class="widgetheading">Contáctanos</h5>
+         
+          <strong> <br>
+            Universidad Nacional Autónoma de México,<br> Ciudad Universitaria, 
+            Av. Universidad #3000, Colonia, C.U., <br>Coyoacán, 04510 Ciudad de México<br>
+           C.P. 04510	 
+
+          <p>
+            <i class="icon-phone"></i>   55 5622 5864 <br>
+            <i class="icon-envelope-alt"></i> 
+          </p>
+        
+      </div>
+      <div class="col s12 m3">
+          <h5 class="widgetheading">Sitios de Interés</h5>
+          <ul class="link-list">
+          
+            <li><a class="gold-text" href="https://www.fmvz.unam.mx/fmvz/principal/sitios.html" target="_blank">UNAM</a></li>
+          
+          </ul>
+          <br>
+          <b><a class="gold-text" href="https://www.fmvz.unam.mx/fmvz/principal/aviso_privacidad.html" target="_blank"> AVISO DE PRIVACIDAD </a></b>
+        
+      </div>
+      <div class="col s12 m3">
+       
+          <h5 class="widgetheading">FMVZ-UNAM
+            Ciudad Universitaria</h5>
+          <ul class="link-list">
+            <li><a  class="gold-text" href="mailto:info@global.unam.mx?subject=Contact%20from%20the%20Web%20Page">
+              simulación@fmvz.unam.mx </a></li>					
+          </ul>
+
+          <div class="widget"><br>
+            <img src="img/firmaUNAMs.png">
+          </div>
+      </div>
+        
+      
+      
+    </div>
+  </div>
+<div class=" white-text">
+  <hr>
+  <div class="row">
+    <div class="col s12 m6 center-align"><p>Sitio Administrado por FMVZ-UNAM <br>
+      <a class="gold-text" href=""></a></p></div>
+    <div class="col s12 m6 center-align"><p>©</p></div>
+  </div>
+</div>
+</footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/materialize.js"></script>
+</html>
+
+
