@@ -319,6 +319,10 @@ class API extends REST
 				else $this->response('s', 400);
 				if (isset($_POST["e"])) $e = $this->_request["e"];
 				else $this->response('e', 400);
+				if (isset($_POST["f"])) $f = $this->_request["f"];
+				else $this->response('f', 400);
+				if (isset($_POST["g"])) $g = $this->_request["g"];
+				else $this->response('g', 400);
 				if (isset($_POST["p1"])) $p1 = $this->_request["p1"];
 				else $this->response('p1', 400);
 				if (isset($_POST["p2"])) $p2 = $this->_request["p2"];
@@ -327,8 +331,10 @@ class API extends REST
 				$r0 = $this->getDB("SELECT * FROM dls_tUsers WHERE usr='" . $this->sanitize($e) . "'");
 				if (sizeof($r0) > 0) $this->response('E', 400);
 				$iu = $this->snowflake();
-				$qry = "INSERT INTO dls_tUsers (id,name,usr,status,grup,sem,clave,password,id_sede) VALUES ('" . $iu . "','" . $this->sanitize($n) . "','" . $this->sanitize($e) . 
-				"',0,'".$this->encrypt($this->sanitize($p1))."','".$this->sanitize($s)."')";
+				#id	name	usr	clave	grupo	sem	password
+				$qry = "INSERT INTO dls_tUsers (id,name,usr,clave,grupo,sem,password) VALUES 
+				('" . $iu . "','" . $this->sanitize($n) . "','" . $this->sanitize($e) . "' , '".$this->sanitize($f)."' , '".$this->sanitize($g).
+				"','".$this->encrypt($this->sanitize($p1))."','".$this->sanitize($s)."')";
 				$r2 = $this->setDB($qry);
 				if ($r2) $outcome['id'] = $iu;
 				else $this->response($qry, 400);

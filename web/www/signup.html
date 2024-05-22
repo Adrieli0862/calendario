@@ -136,7 +136,7 @@
             return
           }
           var request = new XMLHttpRequest();
-          request.open('POST', 'http://127.0.0.1/calendario/UNAMCR_calendario-master/web/www/api/?api_uri_r=oportunities');
+          request.open('POST', 'http://127.0.0.1/calendario/web/www/api/?api_uri_r=oportunities');
           request.onload = function(oEvent) {
             if (request.status == 200) {
               console.log(request.response);
