@@ -59,3 +59,10 @@ nav li a.active{
     width: 300px;
 
 }
+
+.perfilalumno {
+    height: 250px; /* Ajusta la altura de la sección según sea necesario */
+    width: 200px;
+    background-position: center;
+
+}
